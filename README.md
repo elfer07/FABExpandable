@@ -5,4 +5,4 @@ Example Floating Action Button Expandable like Gmail (compose mail)
 
 ![Screenshot](fab.gif)
 
-[![ScreenShot](images/blue-button.png)](https://www.buymeacoffee.com/fernandomoreno)
+[![ScreenShot](images/buymeacoffee.png)](https://www.buymeacoffee.com/fernandomoreno)
