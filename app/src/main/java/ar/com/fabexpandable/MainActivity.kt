@@ -1,5 +1,6 @@
 package ar.com.fabexpandable
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,19 +9,23 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ar.com.fabexpandable.databinding.ActivityMainBinding
+import ar.com.fabexpandable.databinding.ItemViewBinding
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val fab = findViewById<ExtendedFloatingActionButton>(R.id.fab)
-        val rv = findViewById<RecyclerView>(R.id.rv)
-        rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         val adapter = ExampleAdapter()
-        rv.adapter = adapter
+        binding.rv.adapter = adapter
 
         val listItems = ArrayList<String>()
         var i = 0
@@ -31,12 +36,12 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setData(listItems)
 
-        rv.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        binding.rv.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy>0) {
-                    fab.shrink()
+                    binding.fab.shrink()
                 } else
-                    fab.extend()
+                    binding.fab.extend()
             }
         })
     }
@@ -52,9 +57,9 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_view, parent, false)
-        )
+        val itemViewBinding = ItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val holder = ViewHolder(itemViewBinding, parent.context)
+        return holder
     }
 
     override fun getItemCount() = itemList.size
@@ -63,11 +68,9 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>() {
         holder.binData(itemList[position])
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val tv = view.findViewById<TextView>(R.id.tv_item)
-
+    inner class ViewHolder(val binding: ItemViewBinding, val context: Context) : RecyclerView.ViewHolder(binding.root) {
         fun binData(value: String) {
-            tv.text = value
+            binding.tvItem.text = value
         }
     }
 }
